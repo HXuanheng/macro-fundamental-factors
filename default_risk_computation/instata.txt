@@ -1,0 +1,93 @@
+/* Source: https://www.statalist.org/forums/forum/general-stata-discussion/general/1441874-kmv-merton-model-of-credit-risk */
+
+
+xtset id date1
+gen Ve = daily_price*share_outstanding
+gen X  = (short_term_debt + 0.5long_term_debt)
+
+/* We use daily data from the past 12 months to obtain an estimate of the volatility 
+of equity σE, which is then used as an initial value for the estimation of σA*/
+bysort id: gen pr = log(Ve/Ve[_n-1])
+egen σE0 = sd (pr), by (idyr)  // idyr is "id" + "year"
+gen  σA0 = σE0 if σE0 !=.
+
+/*Using the Black–Scholes formula, and for each trading day of the past 12 
+months, we compute VA using VE as the market value of equity of that day. In 
+this manner, we obtain daily values for VA */
+*   Iteration 1
+gen Va0 = Ve
+gen N1_d1 = normal((ln(Va0/X)+(rf/100+σA0*σA0/2))/σA0)     // from Eq. 3
+gen N1_d2 = normal((ln(Va0/X)+(rf/100+σA0*σA0/2))/σA0-σA0) // from Eq. 3
+gen Va1 = (Ve + X*exp(-rf)*N1_d2)/N1_d1  // from Eq. 2
+bysort id: gen Va1r = log(Va1/Va1[_n-1])
+egen σA1 = sd (Va1r), by (idyr)
+
+/* We then compute the standard deviation of those VA’s, which is used as the 
+value of σA, for the next iteration. */
+*   Iteration 2
+gen N2_d1 = normal(( ln(Va1/X)+(rf+σA1*σA1/2))/σA1)
+gen N2_d2 = normal(((ln(Va1/X)+(rf+σA1*σA1/2))/σA1)-σA1)
+gen Va2 = (Ve + X*exp(-rf)*N2_d2)/N2_d1
+bysort id: gen Va2r = log(Va2/Va2[_n-1])
+egen σA2 = sd (Va2r), by (idyr)
+gen delta2 = σA1 - σA2 if σA1 >= σA2
+sum delta2 if delta2 <= 0.0001
+replace delta2 =. if delta2 > 0.0001
+gen σA_final = σA2 if delta2 !=.
+gen Va_final = Va2 if delta2 !=.
+
+/* This procedure is repeated until the values of σA from two consecutive 
+iterations converge. Our tolerance level for convergence is 10E-4.  */
+* Iteration 3
+gen N3_d1 = normal(( ln(Va2/X)+(rf+σA2*σA2/2))/σA2) if σA_final ==. 
+gen N3_d2 = normal(((ln(Va2/X)+(rf+σA2*σA2/2))/σA2)-σA2) if σA_final ==. 
+gen Va3 = (Ve + X*exp(-rf)*N3_d2)/N3_d1 if σA_final ==. 
+bysort id: gen Va3r = log(Va3/Va3[_n-1]) if σA_final ==. 
+egen σA3 = sd (Va3r), by (idyr) 
+gen delta3= σA2 - σA3 if σA2 >= σA3 & σA_final ==.
+sum delta3 if delta3 <=0.0001  // continue until Obs = 0
+replace delta3 =. if delta3 > 0.0001
+order σA_final, last
+replace σA_final = σA3 if delta3 !=.
+replace Va_final = Va3 if delta3 !=.
+
+...
+
+
+// Iteration 9 (I assume that we just need 8 iterations to level for convergence < 10E-4)
+gen N9_d1 = normal(( ln(Va8/X)+(rf+σA8*σA8/2))/σA8) if σA_final ==. 
+gen N9_d2 = normal(((ln(Va8/X)+(rf+σA8*σA8/2))/σA8)-σA8) if σA_final ==. 
+gen Va9 = (Ve + X*exp(-rf)*N9_d2)/N9_d1 if σA_final ==. 
+bysort id: gen Va9r = log(Va9/Va9[_n-1]) if σA_final ==. 
+egen σA9 = sd (Va9r), by (idyr)
+gen delta9= σA8 - σA9 if σA8 >= σA9 & σA_final ==.
+sum delta9 if delta9 <=0.0001 // Obs = 0. Ending this iterative procedure
+
+save output_data.dta, replace
+
+
+* Analysis
+use output_data.dta, clear
+rename σA_final σA // this is σA that we need
+rename Va_final Va
+
+gen   d1 =  (ln(Va/X)+(rf/100+σA*σA/2))/σA
+gen N_d1 = normal(d1)
+gen   d2 = ((ln(Va/X)+(rf/100+σA*σA/2))/σA)-σA
+gen N_d2 = normal(d2)
+gen Vaf  = (Ve + X*exp(-rf/100)*N_d2)/N_d1 // from Eq. 2
+
+bysort id: gen ra  = log(Vaf/Vaf[_n-1])
+gen mu1   = 252*ra
+egen mu   = mean(mu1), by (idyr)  // the mean of the change in lnVaf
+egen σAff = sd(ra), by (idyr)
+gen σAf   = sqrt(252)*σAff  //  Annualize volatility
+
+gen DD  = (ln(Vaf/X) + (mu-(σAf*σAf)/2))/σAf // from Eq. 8 
+gen Pdef = normal(-DD) // from Eq. 9
+
+*Graph
+egen PD  = mean(Pdef), by(quarter)
+collapse (first) PD, by(quarter)
+bgshade quarter if quarter >= yq(1970,1), legend shaders(quarter) ///
+twoway(line PD quarter if quarter >= yq(1970,1), lcolor(navy))

@@ -1,0 +1,3 @@
+https://github.com/TommasoBelluzzo/SystemicRisk  ---> in matlab
+
+https://towardsdatascience.com/predicting-bankruptcy-the-contingent-claim-model-3701636b3ae9 ---> python
