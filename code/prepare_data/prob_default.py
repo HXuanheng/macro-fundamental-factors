@@ -122,12 +122,19 @@ def preparing_comp():
     comp=comp[['gvkey','datadate','dlc', 'dltt']] 
     return comp
 
-def preparing_crsp():
+def preparing_crsp(year):
     # read crsp pulled data
-    # crsp_d = pd.read_csv(resource + "wrds_crsp_d.csv", parse_dates=['date'])
-    crsp_d = pd.read_csv(resource + "wrds_crsp_d_9099.csv", parse_dates=['date'])
+    year_bf = str(year-1)
+    year_str = str(year)
+    # Read the first CSV file
+    crsp1 = pd.read_csv(resource + f"wrds_crsp_d_{year_bf[2:]}.csv", parse_dates=['date'])
+    # Read the second CSV file
+    crsp2 = pd.read_csv(resource + f"wrds_crsp_d_{year_str[2:]}.csv", parse_dates=['date'])
+    # Concatenate the DataFrames
+    crsp_d = pd.concat([crsp1, crsp2])
+    # crsp_d = pd.read_csv(resource + f"wrds_crsp_d_{year_bf[2:]}{year_str[2:]}.csv", parse_dates=['date'])
     # change variable format to int
-    crsp_d[['permco','permno','shrcd']]=crsp_d[['permco','permno','shrcd']].astype(int)
+    crsp_d[['permco','permno']]=crsp_d[['permco','permno']].astype(int)
 
     # perm_list = [10031,54594,29591,17057] ########################################
     # crsp_d = crsp_d[crsp_d['permno'].isin(perm_list)] ########################################
@@ -174,32 +181,32 @@ def preparing_ccm(comp):
 def main():
     print('preparing compustat...')
     comp = preparing_comp()
-    print('preparing crsp...')
-    crsp = preparing_crsp()
-    print('preparing cmm...')
-    ccm = preparing_ccm(comp)
-    default_p = crsp.groupby(['permno','year','month'])['day'].max().reset_index()
-    default_p['date'] = pd.to_datetime(default_p[['year','month', 'day']]) + MonthEnd(0)
-    default_p=default_p.drop(['year','month','day'], axis=1)
-    default_p = pd.merge(default_p, ccm, how='left', on=['permno'])
-    default_p = default_p.loc[(default_p.start_disclosure_date < default_p.date) & (default_p.date <= default_p.end_public_date)]
-    fred = pd.read_csv(resource + "fred.csv", parse_dates=['date'])
-    rf = fred[['date','DGS1']] # 1 year T-bill
-    default_p=pd.merge(default_p, rf, how='left', on=['date'])
-    T = 1
+    years = [2005,2006,2007,2008]
+    for year in years:
+        print(f'preparing crsp for {str(year)}...')
+        crsp = preparing_crsp(year)
+        print('preparing cmm...')
+        ccm = preparing_ccm(comp)
+        default_p = crsp.groupby(['permno','year','month'])['day'].max().reset_index()
+        default_p['date'] = pd.to_datetime(default_p[['year','month', 'day']]) + MonthEnd(0)
+        default_p=default_p.drop(['year','month','day'], axis=1)
+        default_p = pd.merge(default_p, ccm, how='left', on=['permno'])
+        default_p = default_p.loc[(default_p.start_disclosure_date < default_p.date) & (default_p.date <= default_p.end_public_date)]
+        fred = pd.read_csv(resource + "fred.csv", parse_dates=['date'])
+        rf = fred[['date','DGS1']] # 1 year T-bill
+        default_p=pd.merge(default_p, rf, how='left', on=['date'])
+        T = 1
 
-    # default_p[['Va', 'sigma_a', 'p_def', 'DD']] = default_p.progress_apply(lambda x:  row_dd(x,crsp,T), axis=1, result_type='expand') #########################
-    # default_p.dropna(subset=['Va'], inplace=True)
-    # default_p.to_csv(results + 'prova_default.csv', index=False) #################################
+        # default_p[['Va', 'sigma_a', 'p_def', 'DD']] = default_p.progress_apply(lambda x:  row_dd(x,crsp,T), axis=1, result_type='expand') #########################
+        # default_p.dropna(subset=['Va'], inplace=True)
+        # default_p.to_csv(results + 'prova_default.csv', index=False) #################################
 
-    for year in default_p['date'].dt.year.unique():
-        if year in [1999,2000]:
-            # Select the rows where the 'date' column is in the current year
-            year_data = default_p[default_p['date'].dt.year == year]
-            year_data[['Va', 'sigma_a', 'p_def', 'DD']] = year_data.progress_apply(lambda x:  row_dd(x,crsp,T), axis=1, result_type='expand')
-            year_data.dropna(subset=['Va'], inplace=True)
-            # output the prepared data
-            year_data.to_csv(results + f'p_def_{year}.csv', index=False)
+        # Select the rows where the 'date' column is in the current year
+        year_data = default_p[default_p['date'].dt.year == year]
+        year_data[['Va', 'sigma_a', 'p_def', 'DD']] = year_data.progress_apply(lambda x:  row_dd(x,crsp,T), axis=1, result_type='expand')
+        year_data.dropna(subset=['Va'], inplace=True)
+        # output the prepared data
+        year_data.to_csv(results + f'p_def_{year}.csv', index=False)
 
 if __name__ == '__main__':
     main()
