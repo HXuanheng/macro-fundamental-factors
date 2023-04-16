@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 ################################################################################
 ### A generic function for writing tables to tex with some customization
 ################################################################################
@@ -333,7 +334,7 @@ Output:
     df = pd.DataFrame(data,columns=colnames,index=rownames)
 
     for key,value in addrows.items():
-        df = df.append(pd.DataFrame([[str(v) for v in value]],index=[key],columns=df.columns))
+        df = pd.concat([df, pd.DataFrame([[str(v) for v in value]], index=[key], columns=df.columns)])
 
     # Do stuff if there are model statistics to pull
     if modstat:
@@ -342,7 +343,7 @@ Output:
             r = []
             for m in models:
                 r.append(trygetstat(key,m))
-            options = options.append(pd.DataFrame([r],index=[value]))
+            options = pd.concat([options, pd.DataFrame([r], index=[value])])
     else:
         options = pd.DataFrame()
 
@@ -350,3 +351,62 @@ Output:
     tex = tex_table(df=df,addnotes=addnotes,mgroups=mgroups,title=title,label=label,
                 tableopts=tableopts,options=options,footnotesize=footnotesize)
     return tex
+
+
+################################################################################
+### The output functon for any coefficient and statistic (in parenthesis)
+################################################################################
+def table_to_latex(coefficients: pd.DataFrame, 
+                   t_stats: pd.DataFrame, 
+                   row_name=None, 
+                   column_name=None, 
+                   sideways=False) -> str:
+    # rename the row and columns
+    if row_name:
+        coefficients.index = row_name
+        t_stats.index = row_name
+    if column_name:
+        coefficients.columns = column_name
+        t_stats.columns = column_name
+
+    # create an empty string to store the LaTeX code
+    latex_code = ''
+    
+    # start the table
+    if sideways:
+        latex_code += '\\begin{sidewaystable}\n'
+    else:
+        latex_code += '\\begin{table}\n'
+    latex_code += '\\centering\n'
+    latex_code += '\\begin{tabular}{l*{'
+    latex_code += f'{len(column_name)}'
+    latex_code += '}{c}}\n'
+    latex_code += '\\hline\n'
+    
+    # add the column headers for the coefficients table
+    for column in coefficients.columns:
+        latex_code += f'& {column}'
+
+    latex_code += '\\\\\n'
+    latex_code += '\\hline\n'
+    latex_code += '\\\\\n'
+    
+    # add the row headers, coefficients, and t-stats to the table
+    for row in coefficients.index:
+        latex_code += f'{row}'
+        for column in coefficients.columns:
+            coefficient = coefficients.loc[row, column]
+            t_stat = t_stats.loc[row, column]
+            latex_code += f' & {coefficient:.2f} ({t_stat:.2f})'
+        latex_code += '\\\\\n'
+    
+    # add the footer and end the table
+    latex_code += '\\hline\n'
+    latex_code += '\\end{tabular}\n'
+    # start the table
+    if sideways:
+        latex_code += '\\end{sidewaystable}\n'
+    else:
+        latex_code += '\\end{table}\n'
+    
+    return latex_code
