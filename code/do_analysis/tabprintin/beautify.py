@@ -305,7 +305,7 @@ Output:
     else:
         paramlist = exogvars
 
-    # Making the inside of the table, currently does coef + se
+    # Making the inside of the table, currently does coef + t_stats
     data = []
     for p in paramlist:
         r = []
@@ -318,9 +318,9 @@ Output:
         data.append(r)
         r = []
         for m in models:
-            cell = trygetcov(p,m)
+            cell1 = trygetcov(p,m)
             if not np.isnan(cell):
-                r.append('('+format_digform(cell)+')')
+                r.append('('+format_digform(cell/cell1)+')')
             else:
                 r.append('')
         data.append(r)
@@ -329,7 +329,7 @@ Output:
     rownames = [tryrelabel(p) for p in paramlist.copy()]
     for ii in range(1,2*len(rownames)+1,2):
         rownames.insert(ii,'')
-    rownames = [x.replace('_','\_') for x in rownames]
+    # rownames = [x.replace('_','\_') for x in rownames]
 
     df = pd.DataFrame(data,columns=colnames,index=rownames)
 
@@ -359,8 +359,7 @@ Output:
 def table_to_latex(coefficients: pd.DataFrame, 
                    t_stats: pd.DataFrame, 
                    row_name=None, 
-                   column_name=None, 
-                   sideways=False) -> str:
+                   column_name=None) -> str:
     # rename the row and columns
     if row_name:
         coefficients.index = row_name
@@ -373,14 +372,10 @@ def table_to_latex(coefficients: pd.DataFrame,
     latex_code = ''
     
     # start the table
-    if sideways:
-        latex_code += '\\begin{sidewaystable}\n'
-    else:
-        latex_code += '\\begin{table}\n'
-    latex_code += '\\centering\n'
     latex_code += '\\begin{tabular}{l*{'
     latex_code += f'{len(column_name)}'
     latex_code += '}{c}}\n'
+    latex_code += '\\hline\n'
     latex_code += '\\hline\n'
     
     # add the column headers for the coefficients table
@@ -389,24 +384,23 @@ def table_to_latex(coefficients: pd.DataFrame,
 
     latex_code += '\\\\\n'
     latex_code += '\\hline\n'
-    latex_code += '\\\\\n'
     
     # add the row headers, coefficients, and t-stats to the table
     for row in coefficients.index:
+        coefficient_row = coefficients.loc[row]
+        t_stat_row = t_stats.loc[row]
         latex_code += f'{row}'
-        for column in coefficients.columns:
-            coefficient = coefficients.loc[row, column]
-            t_stat = t_stats.loc[row, column]
-            latex_code += f' & {coefficient:.2f} ({t_stat:.2f})'
+        for coefficient, t_stat in zip(coefficient_row, t_stat_row):
+            latex_code += f' & {coefficient:.2f}'
+        latex_code += '\\\\\n'
+        latex_code += '  '
+        for coefficient, t_stat in zip(coefficient_row, t_stat_row):
+            latex_code += f' & ({t_stat:.2f})'
         latex_code += '\\\\\n'
     
     # add the footer and end the table
     latex_code += '\\hline\n'
+    latex_code += '\\hline\n'
     latex_code += '\\end{tabular}\n'
-    # start the table
-    if sideways:
-        latex_code += '\\end{sidewaystable}\n'
-    else:
-        latex_code += '\\end{table}\n'
     
     return latex_code

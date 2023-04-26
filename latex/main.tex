@@ -1,4 +1,5 @@
 \documentclass[12pt,a4paper]{ouparticle}
+% \documentclass{article}
 % \usepackage[T1]{fontenc}
 \usepackage{mathptmx}
 \usepackage{times}
@@ -41,8 +42,8 @@
 
 %\title{Referee Report}
 \title{%
-  Exam   \\
-  \large PhD course - Macroeconomics 3}
+  Macroeconomic factor models   \\
+  \large Report}
 
 \author{%
 \name{Xuanheng Huang}}
@@ -53,21 +54,19 @@
 
 
 \section{Introduction}
-In this report, I examine the following paper: "Macroeconomic risks and characteristic-based factor models." by Aretz, Kevin, Söhnke M. Bartram, and Peter F. Pope, published in the Journal of Banking \& Finance.
-
-In section 2, I show the replication of the main results. Then, in section 3, I describe the strengths and weaknesses of the paper in a referee report. In the last part, section 4, I propose some extensions of the paper. 
+In this report, I examine the following paper: "Macroeconomic risks and characteristic-based factor models." by Aretz, Kevin, Söhnke M. Bartram, and Peter F. Pope, published in the Journal of Banking \& Finance. In section 2, I show the replication of the main results. In section 3, I highlight the strengths and weaknesses of the paper. In the last part, section 4, I propose some extensions of the paper. 
 
 
 \section{Replication}
-Table 1 shows the estimation results for the mimicking portfolios for industrial production growth. The paper uses bond returns data from Ibbotson Associates. I do not have access to this database, I use the bond returns data from Bloomberg.  Table 2 shows the summary statistics of the macroeconomic variables that are used in the macroeconomic factor model. The changes in the survival probability have public data only until 1999. I extended the data from 2000 to 2008. Table 3 shows the Granger causality results between the macroeconomic variables and financial factors (book-to-market ratio, size, and momentum). Figure 1 shows the beta estimates from the GMM of the one-way sorted firm characteristic deciles. 
+Table 1 shows the estimation results for the mimicking portfolios for industrial production growth. The original paper uses bond returns data from Ibbotson Associates. I do not have access to this database, I use the bond returns data from Bloomberg. Table 2 shows the summary statistics of the macroeconomic variables that are used in the macroeconomic factor model. The changes in the survival probability have public data only until 1999. I extended the data to the period from 2000 to 2008 \footnote{The Pearsons' correlation between the monthly DSV series obtained from Maria Vassalou’s website and mine is $0.712$}. Table 3 shows the Granger causality results between the macroeconomic variables and financial factors (book-to-market ratio, size, and momentum). Figure 1 shows the beta estimates from the GMM of the one-way sorted firm characteristic deciles. 
 
 \begin{table}
   \begin{threeparttable}
     \caption{Estimation of the mimicking portfolio for industrial production growth}
-    \input{table1}
+    \input{tables/mimick}
     \begin{tablenotes} 
-    \small 
-    \item This table shows the outcomes from OLS estimations of the log change in industrial production over the next year onto on a set of base asset excess returns and lagged control variable realizations. The base assets consist of the market portfolio, two government bond portfolios, a default bond portfolio, and gold. To allow for time-variation in the market portfolio weight, the regression includes two market portfolio slope dummies for the period from April 1987 to April 1988 (the one year surrounding the October 1987 stock market crash) and the period from January 1996 to December 2002 (the Internet bubble period). All base asset returns are in excess of the risk-free rate of return, and thus weights do not need to sum up to unity. The regressions control for the expected level of returns by including a set of lagged control variables, containing the risk-free rate, the yield spread between long-term and short-term government bonds, the yield spread between one-year and short-term government bonds, the yield spread between Baa-rated and Aaa-rated corporate bonds and the dividend yield on the S\&P 500. Controls include industrial production growth, inflation and excess market returns over the last year. Since realized industrial production growth has an overlap with its lagged value of eleven months, the variances have the Newey and West (1987) correction with l = 11. The sample period extends from January 1978 to April 2008.
+    \footnotesize
+    \item This table shows the outcomes from OLS estimations of the log change in industrial production over the next year onto on a set of base asset excess returns and lagged control variable realizations. The base assets consist of the market portfolio, two government bond portfolios, a default bond portfolio, and gold. To allow for time-variation in the market portfolio weight, the regression includes two market portfolio slope dummies for the period from April 1987 to April 1988 (the one year surrounding the October 1987 stock market crash) and the period from January 1996 to December 2002 (the Internet bubble period). All base asset returns are in excess of the risk-free rate of return, and thus weights do not need to sum up to unity. The regressions control for the expected level of returns by including a set of lagged control variables, containing the risk-free rate, the yield spread between long-term and short-term government bonds, the yield spread between one-year and short-term government bonds, the yield spread between Baa-rated and Aaa-rated corporate bonds and the dividend yield on the S\&P 500. Controls include industrial production growth, inflation and excess market returns over the last year. Since realized industrial production growth has an overlap with its lagged value of eleven months, the variances have the Newey and West (1987) correction with $l = 11$. The sample period extends from January 1978 to April 2008.
     \end{tablenotes}
   \end{threeparttable}
 \end{table}
@@ -75,38 +74,49 @@ Table 1 shows the estimation results for the mimicking portfolios for industrial
 \begin{sidewaystable}
   \begin{threeparttable}
     \caption{Summary statistics}
-    \input{table2}
+    \input{tables/summary_stats}
     \begin{tablenotes} 
     \small 
-    \item This table provides summary statistics on our analysis variables.
+    \item This table provides summary statistics on the analysis variables. The sample period extends from January 1978 to April 2008.
     \end{tablenotes}
   \end{threeparttable}
 \end{sidewaystable}
 
-\begin{sidewaystable}
+\begin{table}
+\centering
   \begin{threeparttable}
     \caption{VAR estimation}
-    \input{table3}
+    \input{tables/var_est}
     \begin{tablenotes} 
     \small 
     \item This table reports the empirical outcomes from estimations of VAR systems on the Fama and French and Carhart benchmark factors, i.e., HML, SMB and WML, and the macroeconomic fundamentals. The macroeconomic fundamentals are the mimicking portfolio on changes in industrial production growth expectations (MYP), unexpected inflation (UI), changes in the survival probability (DSV), changes in the average level of the term structure of risk-free interest rate yields (ATS), changes in the slope of the term structure of risk-free interest rate yields (STS) and changes in the exchange rate between the US dollar and a trade-weighted composite currency (FX). This table uses monthly data from January 1978 to April 2008 with a lag size equal to one. Numbers in parentheses are t-statistics.
     The independent variables are lagged by one period.
     \end{tablenotes}
   \end{threeparttable}
-\end{sidewaystable}
+\end{table}
 
 
 \begin{figure}
 \centering
-    \includegraphics[width=16cm]{output1.png}\\
-    \includegraphics[width=16cm]{output2.png}\\
-    \includegraphics[width=16cm]{output3.png}
+    \includegraphics[width=16cm]{plots/betahist1.png}\\
+    \includegraphics[width=16cm]{plots/betahist2.png}\\
+    \includegraphics[width=16cm]{plots/betahist3.png}
 % \captionsetup{labelformat=empty}
   \caption{This figure shows the macroeconomic risk exposure estimates of the one-way sorted firm characteristic deciles on the macroeconomic fundamentals and their statistics. The macroeconomic fundamentals are changes in industrial production growth expectations (MYP), unexpected inflation (UI), changes in the aggregate survival probability (DSV), changes in the average level and the slope of the term structure of risk-free interest rate yields (ATS and STS, respectively), and changes in the exchange rate between the US dollar and a trade-weighted composite currency (FX). The blue bars are the estimated risk exposures, while the red lines are the t-statistics. The first row shows the outcomes related to the one-way sorted book-to-market deciles, the second those related to the one-way sorted size deciles, and the third those related to the one-way sorted momentum deciles.}
 \end{figure}
 
-
-% \input{table4}
+% \begin{table}
+%   \begin{threeparttable}
+%     \caption{Estimation of Risk premia}
+%     \input{tables/riskpremia1}
+%     % \input{tables/riskpremia2}
+%     % \input{tables/riskpremia3}
+%     \begin{tablenotes} 
+%     \footnotesize
+%     \item asdfa
+%     \end{tablenotes}
+%   \end{threeparttable}
+% \end{table}
 
 
 \section{Referee's report}
@@ -126,7 +136,7 @@ In the paper, it is not entirely clear how certain variables are constructed. Fo
 
 Additionally, regarding the table showing the results of the mimicking portfolio estimation, the authors do not explain much the results. It would be helpful if the authors provided more discussion on their findings, particularly those that contrast with previous studies. For example, \cite{vassalou2003news} found that the return on long-term government bonds minus the return on short-term government bonds has a positive coefficient in explaining future changes in GDP. However, in this paper, the long-term government bond has a positive coefficient in explaining future changes in industrial production.
 
-Overall, while the paper presents numerous correlation results, it lacks a strong theoretical framework to support them. The authors do conduct a Granger causality analysis, but further discussion on their findings would be beneficial. This is particularly true for results that are in contrast with previous findings. Such discussion would be useful in their analysis of the relationship between Fama-French and momentum factors and the macro factor model. It would help us better understand why certain firm characteristics make them more or less sensitive to macroeconomic shocks.
+Overall, while the paper presents numerous correlation results, it lacks a strong theoretical framework to support them. The authors do conduct a Granger causality analysis, but further discussion on their findings would be beneficial. This is particularly true for results that are in contrast with previous findings. Such discussion would be useful in their analysis of the relationship between Fama-French and momentum factors and the macro factor model. It would help us better understand why certain characteristics make firms more or less sensitive to macroeconomic shocks.
  
 
 \section{Proposal (further studies)}
@@ -152,5 +162,3 @@ Additionally, we could expand the characteristic-based model to include the Fama
 \bibliography{bibliography}
 
 \end{document}
-
-
