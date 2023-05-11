@@ -320,7 +320,8 @@ Output:
         for m in models:
             cell1 = trygetcov(p,m)
             if not np.isnan(cell):
-                r.append('('+format_digform(cell/cell1)+')')
+                # r.append('('+format_digform(cell/cell1)+')')
+                r.append('('+format_digform(trygetp(p,m.tvalues))+')')
             else:
                 r.append('')
         data.append(r)
@@ -352,31 +353,44 @@ Output:
                 tableopts=tableopts,options=options,footnotesize=footnotesize)
     return tex
 
+# A function to convert p-values to stars (see outtable custom function)
+def starget(x,stars={.1:'*',.05:'**',.01:'***'}):
+    y = ''
+    if stars and not np.isnan(x):
+    # if stars:
+        sorted(stars,reverse=True)
+        for k in stars.keys():
+            if x<=k:
+                y = r'\sym{%s}' %stars[k]
+    return y
 
 ################################################################################
 ### The output functon for any coefficient and statistic (in parenthesis)
 ################################################################################
 def table_to_latex(coefficients: pd.DataFrame, 
-                   t_stats: pd.DataFrame, 
+                   stats: pd.DataFrame, 
+                   p_values: pd.DataFrame,
                    row_name=None, 
                    column_name=None) -> str:
     # rename the row and columns
     if row_name:
         coefficients.index = row_name
-        t_stats.index = row_name
+        stats.index = row_name
+        p_values.index = row_name
     if column_name:
         coefficients.columns = column_name
-        t_stats.columns = column_name
+        stats.columns = column_name
+        p_values.columns = column_name
 
     # create an empty string to store the LaTeX code
     latex_code = ''
     
-    # start the table
-    latex_code += '\\begin{tabular}{l*{'
-    latex_code += f'{len(column_name)}'
-    latex_code += '}{c}}\n'
-    latex_code += '\\hline\n'
-    latex_code += '\\hline\n'
+    # header
+    header = '\n'.join(['{',
+                        '\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\\fi}',
+                        '\\begin{tabular}{@{\extracolsep{2pt}}l*{%i}{c}@{}}' %len(column_name),
+                        '\hline\hline\n'])
+    latex_code += header
     
     # add the column headers for the coefficients table
     for column in coefficients.columns:
@@ -385,22 +399,24 @@ def table_to_latex(coefficients: pd.DataFrame,
     latex_code += '\\\\\n'
     latex_code += '\\hline\n'
     
-    # add the row headers, coefficients, and t-stats to the table
+    # add the row headers, coefficients, and stats to the table
     for row in coefficients.index:
         coefficient_row = coefficients.loc[row]
-        t_stat_row = t_stats.loc[row]
+        stat_row = stats.loc[row]
+        p_values_row = p_values.loc[row]
         latex_code += f'{row}'
-        for coefficient, t_stat in zip(coefficient_row, t_stat_row):
-            latex_code += f' & {coefficient:.2f}'
+        for coefficient, stat, p_value in zip(coefficient_row, stat_row, p_values_row):
+            latex_code += f' & {coefficient:.2f}' + starget(p_value)
         latex_code += '\\\\\n'
         latex_code += '  '
-        for coefficient, t_stat in zip(coefficient_row, t_stat_row):
-            latex_code += f' & ({t_stat:.2f})'
+        for coefficient, stat, p_value in zip(coefficient_row, stat_row, p_values_row):
+            latex_code += f' & ({stat:.2f})'
         latex_code += '\\\\\n'
     
     # add the footer and end the table
     latex_code += '\\hline\n'
     latex_code += '\\hline\n'
     latex_code += '\\end{tabular}\n'
+    latex_code += '}\n'
     
     return latex_code

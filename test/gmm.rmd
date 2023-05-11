@@ -1,0 +1,103 @@
+---
+title: "Prova gmm"
+author: "Xuanheng HUANG"
+header-includes:
+   - \usepackage{dcolumn}
+output: pdf_document
+---
+
+## Install packages 
+
+```{r setup, include=FALSE}
+install_package_if_missing <- function(pkg) {
+  if (! pkg %in% installed.packages()[, "Package"]) install.packages(pkg)
+}
+
+install_package_if_missing("pacman")
+
+pacman::p_load(pacman,gmm,stargazer,rio,psych,tidyverse,lmtest,sandwich)
+
+knitr::opts_chunk$set(echo=TRUE)
+```
+
+## Import data
+
+```{r, echo = FALSE, results='asis', comment=NA}
+resource <- "data/generated/"
+start_date <- as.Date("1978-01-01")
+end_date <- as.Date("2008-04-30")
+
+ts <- read.csv(paste0(resource, "time_series_1.csv"))
+ts$date <- as.Date(ts$date)
+ts1 <- ts[ts$date >= start_date & ts$date <= end_date,]
+
+bm_port <- read.csv(paste0(resource, "bm_port.csv"))
+bm_port$date <- as.Date(bm_port$date)
+ts3 <- merge(ts1, bm_port, by = "date", all.x = TRUE)
+
+macro_factors <- ts3[, c("myp", "ui", "dsv", "ats", "sts", "fx")]
+financial_factors <- ts3[, c("ex_mkt", "smb", "hml", "mom")]
+riskfree <- ts3[, "rf"]
+portfolios <- ts3[, c("dec_1", "dec_2", "dec_3", "dec_4", "dec_5", "dec_6", "dec_7", "dec_8", "dec_9", "dec_10")]
+
+T <- nrow(portfolios)
+N <- ncol(portfolios)
+excessRet <- portfolios - matrix(riskfree, nrow = T, ncol = 1)
+K <- ncol(macro_factors)
+
+dat <- cbind(macro_factors, riskfree, excessRet)
+```
+
+## Try GMM
+
+```{r, echo = FALSE, results='asis', comment=NA}
+g <- function(theta, dat){
+  # dat[is.nan(dat)] <- 0
+  b <- theta
+  r_ex <- dat[, c(8:ncol(dat))]
+  X <- dat[, c(1, 2, 3, 4, 5, 6)]
+  obj <- r_ex * kronecker((rep(1, nrow(X)) - X %*% b), t(rep(1, ncol(r_ex))))
+  return(obj)
+}
+
+# 1-step gmm estimator
+fit_gmm1 <- gmm(g, as.matrix(dat), rep(0, 6), weightsMatrix = diag(N))
+fit_gmm1$coefficients
+```
+
+```{r, echo = FALSE, results='asis', comment=NA}
+gmm_objective_b <- function(params, pRets, fRets, Winv) {
+  T <- nrow(pRets)
+  N <- ncol(pRets)
+  K <- ncol(fRets)
+  b <- matrix(params, ncol = 1)
+  sdf <- matrix(1, nrow = T) - fRets %*% b
+  moments <- pRets * kronecker((sdf), t(rep(1, ncol(pRets)))) 
+  avgMoment <- colMeans(moments)
+  # J <- T * t(avgMoment) %*% Winv %*% avgMoment
+  J <-  t(avgMoment) %*% Winv %*% avgMoment
+  return(J)
+}
+
+startingVals <- rep(0, 6)
+
+Winv <- diag(N)
+args <- list(excessRet, macro_factors, Winv)
+
+# fit_gmm <- optim(startingVals, gmm_objective_b, pRets=as.matrix(excessRet), fRets=as.matrix(macro_factors),
+#                  Winv=diag(N), method="BFGS", control=list(trace=1, reltol=1e-12, maxit=10000), hessian=TRUE)
+
+fit_gmm <- optim(startingVals, gmm_objective_b, pRets=as.matrix(excessRet), fRets=as.matrix(macro_factors),
+                 Winv=diag(N), control=list(trace=1), hessian=TRUE)
+
+fit_gmm$par
+```
+
+
+```{r, echo = FALSE, results='asis', comment=NA}
+b <- c(-49.5247,-4.7737,113.7766,25.9245,90.8717,16.7917)
+b <- c(-30.11158833,  237.66483381,   88.98292253, -148.44282895,
+         52.95375349,  -13.72251736)
+T <- gmm_objective_b(b, as.matrix(excessRet), as.matrix(macro_factors), diag(N))
+T
+```
