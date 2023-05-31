@@ -1,28 +1,20 @@
 \begin{thebibliography}{}
 
-\bibitem[\protect\citeauthoryear{Bansal and Yaron}{Bansal and
-  Yaron}{2004}]{bansal2004risks}
-Bansal, R. and A.~Yaron (2004).
-\newblock Risks for the long run: A potential resolution of asset pricing
-  puzzles.
-\newblock {\em The journal of Finance\/}~{\em 59\/}(4), 1481--1509.
+\bibitem[\protect\citeauthoryear{Aretz, Bartram, and Pope}{Aretz
+  et~al.}{2010}]{aretz2010macroeconomic}
+Aretz, K., S.~M. Bartram, and P.~F. Pope (2010).
+\newblock Macroeconomic risks and characteristic-based factor models.
+\newblock {\em Journal of Banking \& Finance\/}~{\em 34\/}(6), 1383--1399.
 
-\bibitem[\protect\citeauthoryear{Croce, Nguyen, Raymond, and Schmid}{Croce
-  et~al.}{2019}]{croce2019government}
-Croce, M.~M., T.~T. Nguyen, S.~Raymond, and L.~Schmid (2019).
-\newblock Government debt and the returns to innovation.
-\newblock {\em Journal of Financial Economics\/}~{\em 132\/}(3), 205--225.
+\bibitem[\protect\citeauthoryear{Carhart}{Carhart}{1997}]{carhart1997persistence}
+Carhart, M.~M. (1997).
+\newblock On persistence in mutual fund performance.
+\newblock {\em The Journal of finance\/}~{\em 52\/}(1), 57--82.
 
-\bibitem[\protect\citeauthoryear{Detzel, Novy-Marx, and Velikov}{Detzel
-  et~al.}{2022}]{detzel2022model}
-Detzel, a., R.~Novy-Marx, and M.~Velikov (2022).
-\newblock Model comparison with transaction costs.
-\newblock {\em The Journal of Finance\/}.
-
-\bibitem[\protect\citeauthoryear{Duffee}{Duffee}{2022}]{duffee2022macroeconomic}
-Duffee, G.~R. (2022).
+\bibitem[\protect\citeauthoryear{Duffee}{Duffee}{2023}]{duffee2023macroeconomic}
+Duffee, G.~R. (2023).
 \newblock Macroeconomic news in asset pricing and reality.
-\newblock {\em Journal of Finance, Forthcoming\/}.
+\newblock {\em The Journal of Finance\/}~{\em 78\/}(3), 1499--1543.
 
 \bibitem[\protect\citeauthoryear{Fama and French}{Fama and
   French}{2015}]{fama2015five}
@@ -42,11 +34,19 @@ Fama, E.~F. and M.~R. Gibbons (1984).
 \newblock A comparison of inflation forecasts.
 \newblock {\em Journal of monetary Economics\/}~{\em 13\/}(3), 327--348.
 
-\bibitem[\protect\citeauthoryear{G{\^a}rleanu and Panageas}{G{\^a}rleanu and
-  Panageas}{2023}]{garleanu2023heterogeneity}
-G{\^a}rleanu, N. and S.~Panageas (2023).
-\newblock Heterogeneity and asset prices: An intergenerational approach.
-\newblock {\em Journal of Political Economy\/}~{\em 131\/}(4), 000--000.
+\bibitem[\protect\citeauthoryear{Hahn and Lee}{Hahn and
+  Lee}{2006}]{hahn2006yield}
+Hahn, J. and H.~Lee (2006).
+\newblock Yield spreads as alternative risk factors for size and
+  book-to-market.
+\newblock {\em Journal of Financial and Quantitative Analysis\/}~{\em 41\/}(2),
+  245--269.
+
+\bibitem[\protect\citeauthoryear{Herskovic, Kind, and Kung}{Herskovic
+  et~al.}{2023}]{herskovic2023micro}
+Herskovic, B., T.~Kind, and H.~Kung (2023).
+\newblock Micro uncertainty and asset prices.
+\newblock {\em Journal of Financial Economics\/}~{\em 149\/}(1), 27--51.
 
 \bibitem[\protect\citeauthoryear{Hou, Mo, Xue, and Zhang}{Hou
   et~al.}{2021}]{hou2021augmented}
@@ -59,5 +59,35 @@ Hou, K., H.~Mo, C.~Xue, and L.~Zhang (2021).
 Hou, K., C.~Xue, and L.~Zhang (2015).
 \newblock Digesting anomalies: An investment approach.
 \newblock {\em The Review of Financial Studies\/}~{\em 28\/}(3), 650--705.
+
+\bibitem[\protect\citeauthoryear{Liew and Vassalou}{Liew and
+  Vassalou}{2000}]{liew2000can}
+Liew, J. and M.~Vassalou (2000).
+\newblock Can book-to-market, size and momentum be risk factors that predict
+  economic growth?
+\newblock {\em Journal of Financial Economics\/}~{\em 57\/}(2), 221--245.
+
+\bibitem[\protect\citeauthoryear{Merton}{Merton}{1974}]{merton1974pricing}
+Merton, R.~C. (1974).
+\newblock On the pricing of corporate debt: The risk structure of interest
+  rates.
+\newblock {\em The Journal of finance\/}~{\em 29\/}(2), 449--470.
+
+\bibitem[\protect\citeauthoryear{Petkova}{Petkova}{2006}]{petkova2006fama}
+Petkova, R. (2006).
+\newblock Do the fama--french factors proxy for innovations in predictive
+  variables?
+\newblock {\em The Journal of Finance\/}~{\em 61\/}(2), 581--612.
+
+\bibitem[\protect\citeauthoryear{Vassalou}{Vassalou}{2003}]{vassalou2003news}
+Vassalou, M. (2003).
+\newblock News related to future gdp growth as a risk factor in equity returns.
+\newblock {\em Journal of financial economics\/}~{\em 68\/}(1), 47--73.
+
+\bibitem[\protect\citeauthoryear{Vassalou and Xing}{Vassalou and
+  Xing}{2004}]{vassalou2004default}
+Vassalou, M. and Y.~Xing (2004).
+\newblock Default risk in equity returns.
+\newblock {\em The journal of finance\/}~{\em 59\/}(2), 831--868.
 
 \end{thebibliography}

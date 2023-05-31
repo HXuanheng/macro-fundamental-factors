@@ -1,12 +1,19 @@
-\documentclass[12pt,a4paper]{ouparticle}
-% \documentclass{article}
+\documentclass[11pt,halfline,a4paper]{ouparticle}
+
 % \usepackage[T1]{fontenc}
+
 \usepackage{mathptmx}
 \usepackage{times}
 \usepackage[flushleft]{threeparttable}
 \usepackage{graphicx}
 \setlength\parindent{12pt} 
 
+\usepackage{tabularx}% http://ctan.org/pkg/tabularx
+\newcolumntype{Y}{>{\raggedleft\arraybackslash}X}% raggedleft column X
+
+% \usepackage{subcaption}
+\usepackage{caption}
+\usepackage{booktabs}
 \usepackage{natbib}
 \usepackage{rotating} % Load the rotating package
 \usepackage[hidelinks]{hyperref}
@@ -18,161 +25,399 @@
 }
 \usepackage{xcolor}
 
-\newtheorem{hyp}{Hypothesis}
-\makeatletter
-\newcounter{subhyp} 
-\let\savedc@hyp\c@hyp
-\newenvironment{subhyp}
- {%
-  \setcounter{subhyp}{0}%
-  \stepcounter{hyp}%
-  \edef\saved@hyp{\thehyp}% Save the current value of hyp
-  \let\c@hyp\c@subhyp     % Now hyp is subhyp
-  \renewcommand{\thehyp}{\saved@hyp\alph{hyp}}%
- }
- {}
-\newcommand{\normhyp}{%
-  \let\c@hyp\savedc@hyp % revert to the old one
-  \renewcommand\thehyp{\arabic{hyp}}%
-} 
-
-\onehalfspacing
-
 \begin{document}
 
-%\title{Referee Report}
-\title{%
-  Macroeconomic factor models   \\
-  \large Report}
+\title{Characteristic-based factors and exposure to macroeconomic risks
+% \break {Second Line Title\thanks{We thank...}}
+}
 
 \author{%
-\name{Xuanheng Huang}}
+\name{Xuanheng Huang}
+\address{Bocconi University, Department of Accounting,\\
+Milan, 20136, Italy}
+\email{xuanheng.huang@unibocconi.it}
+\and
+\name{Peter Pope}
+\address{Bocconi University, Department of Accounting,\\
+Milan, 20136, Italy}
+\email{peter.pope@unibocconi.it}}
+
+\abstract{This paper investigates the ability of characteristic-based factor models to capture and account for macroeconomic risk. We study how benchmark factor models \citep[e.g.,][]{fama2015five,carhart1997persistence,hou2021augmented} relate to a factor model based on macroeconomic fundamentals. In particular, in the macroeconomic model, we consider five factors: changes in growth expectation, unexpected inflation, changes in the aggregate survival probability, changes in the average level and the slope of the term structure, and changes in the currency exchange rate. The findings in this paper could potentially explain the reasons behind the varying performance of characteristic-based factor models over time, specifically in the context of regime changes. }
 
 \date{\today}
 
+\keywords{Asset pricing; Fama and French model; Macroeconomic factors; Momentum; q-factor model; and Regime switching}
+
 \maketitle
 
+\newpage
 
 \section{Introduction}
-In this report, I examine the following paper: "Macroeconomic risks and characteristic-based factor models." by Aretz, Kevin, Söhnke M. Bartram, and Peter F. Pope, published in the Journal of Banking \& Finance. In section 2, I show the replication of the main results. In section 3, I highlight some strengths and weaknesses of the paper. In the last part, section 4, I propose some extensions of the paper. 
+
+In recent years, researchers have proposed new factor models \citep[e.g.,][]{fama2018choosing,fama2015five,hou2021augmented}. However, the performance of characteristic-based factors has shown significant variation over time. Following the financial crises of 2007-2009, the returns of the factors from the Fama and French (FF) model have remained stagnant, despite the increasing equity market returns (see Figure \ref{fig:cumret_ff}). This puzzling phenomenon has motivated some papers to understand the underlying causes. For instance, \cite{herskovic2023micro} attribute the divergent performance between the equity market premium and the size and value premium to fluctuations in micro and macro uncertainty. In our study, we take a different approach. Previous research has explored the relationship between the FF factors and the risk derived from macroeconomic fundamentals \citep[e.g.,][]{aretz2010macroeconomic,hahn2006yield,petkova2006fama,vassalou2004default,vassalou2003news,liew2000can}. By examining this relationship and analyzing its changes over time, we aim to shed light on the time-varying performance of the FF model. Specifically, our objective is to ascertain whether the observed change in performance is derived from a regime shift, indicating an altered relationship between characteristic factors and macroeconomic risks. 
 
 
-\section{Replication}
-Table 1 shows the estimation results for the mimicking portfolios for industrial production growth. The original paper uses bond returns data from Ibbotson Associates. I do not have access to this database, I use the bond returns data from Bloomberg. Table 2 shows the summary statistics of the macroeconomic variables that are used in the macroeconomic factor model. The changes in the survival probability have public data only until 1999. I extended the data to the period from 2000 to 2008 \footnote{The Pearsons' correlation between the monthly DSV series obtained from Maria Vassalou’s website and mine is $0.712$}. Table 3 shows the Granger causality results between the macroeconomic variables and financial factors (book-to-market ratio, size, and momentum). Figure 1 shows the beta estimates from the GMM of the one-way sorted firm characteristic deciles. 
-
-\begin{table}
-  \begin{threeparttable}
-    \caption{Estimation of the mimicking portfolio for industrial production growth}
-    \input{tables/mimick}
-    \begin{tablenotes} 
-    \footnotesize
-    \item This table shows the outcomes from OLS estimations of the log change in industrial production over the next year onto on a set of base asset excess returns and lagged control variable realizations. The base assets consist of the market portfolio, two government bond portfolios, a default bond portfolio, and gold. To allow for time-variation in the market portfolio weight, the regression includes two market portfolio slope dummies for the period from April 1987 to April 1988 (the one year surrounding the October 1987 stock market crash) and the period from January 1996 to December 2002 (the Internet bubble period). All base asset returns are in excess of the risk-free rate of return, and thus weights do not need to sum up to unity. The regressions control for the expected level of returns by including a set of lagged control variables, containing the risk-free rate, the yield spread between long-term and short-term government bonds, the yield spread between one-year and short-term government bonds, the yield spread between Baa-rated and Aaa-rated corporate bonds and the dividend yield on the S\&P 500. Controls include industrial production growth, inflation and excess market returns over the last year. Since realized industrial production growth has an overlap with its lagged value of eleven months, the variances have the Newey and West (1987) correction with $l = 11$. The sample period extends from January 1975 to April 2008.
-    \end{tablenotes}
-  \end{threeparttable}
-\end{table}
-
-\begin{sidewaystable}
-\centering
-  \begin{threeparttable}
-    \caption{Summary statistics}
-    \input{tables/summary_stats}
-    \begin{tablenotes} 
-    \small 
-    \item This table provides summary statistics on the analysis variables. The sample period extends from January 1975 to April 2008.
-    \end{tablenotes}
-  \end{threeparttable}
-\end{sidewaystable}
-
-% \begin{table}
-% \centering
-%   \begin{threeparttable}
-%     \caption{VAR estimation}
-%     \input{tables/var_est}
-%     \begin{tablenotes} 
-%     \small 
-%     \item This table reports the empirical outcomes from estimations of VAR systems on the Fama and French and Carhart benchmark factors, i.e., HML, SMB and WML, and the macroeconomic fundamentals. The macroeconomic fundamentals are the mimicking portfolio on changes in industrial production growth expectations (MYP), unexpected inflation (UI), changes in the survival probability (DSV), changes in the average level of the term structure of risk-free interest rate yields (ATS), changes in the slope of the term structure of risk-free interest rate yields (STS) and changes in the exchange rate between the US dollar and a trade-weighted composite currency (FX). This table uses monthly data from January 1975 to April 2008 with a lag size equal to one. Numbers in parentheses are t-statistics.
-%     The independent variables are lagged by one period.
-%     \end{tablenotes}
-%   \end{threeparttable}
-% \end{table}
-
-\begin{table}
-\centering
-  \begin{threeparttable}
-    \caption{VAR estimation}
-    \input{tables/var}
-    \begin{tablenotes} 
-    \small 
-    \item This table reports the empirical outcomes from estimations of VAR systems on the Fama and French and Carhart benchmark factors, i.e., HML, SMB and WML, and the macroeconomic fundamentals. The macroeconomic fundamentals are the mimicking portfolio on changes in industrial production growth expectations (MYP), unexpected inflation (UI), changes in the survival probability (DSV), changes in the average level of the term structure of risk-free interest rate yields (ATS), changes in the slope of the term structure of risk-free interest rate yields (STS) and changes in the exchange rate between the US dollar and a trade-weighted composite currency (FX). This table uses monthly data from January 1975 to April 2008 with a lag size equal to one. Numbers in parentheses are t-statistics.
-    The independent variables are lagged by one period.
-    \end{tablenotes}
-  \end{threeparttable}
-\end{table}
-
-\begin{figure}
-\centering
-    \includegraphics[width=16cm]{plots/betahist1.png}\\
-    \includegraphics[width=16cm]{plots/betahist2.png}\\
-    \includegraphics[width=16cm]{plots/betahist3.png}
-% \captionsetup{labelformat=empty}
-  \caption{This figure shows the macroeconomic risk exposure estimates of the one-way sorted firm characteristic deciles on the macroeconomic fundamentals and their statistics. The macroeconomic fundamentals are changes in industrial production growth expectations (MYP), unexpected inflation (UI), changes in the aggregate survival probability (DSV), changes in the average level and the slope of the term structure of risk-free interest rate yields (ATS and STS, respectively), and changes in the exchange rate between the US dollar and a trade-weighted composite currency (FX). The blue bars are the estimated risk exposures, while the red lines are the t-statistics. The first row shows the outcomes related to the one-way sorted book-to-market deciles, the second those related to the one-way sorted size deciles, and the third those related to the one-way sorted momentum deciles.}
-\end{figure}
-
-% \begin{table}
-%   \begin{threeparttable}
-%     \caption{Estimation of Risk premia}
-%     \input{tables/riskpremia1}
-%     % \input{tables/riskpremia2}
-%     % \input{tables/riskpremia3}
-%     \begin{tablenotes} 
-%     \footnotesize
-%     \item asdfa
-%     \end{tablenotes}
-%   \end{threeparttable}
-% \end{table}
+% In the context of APT \citep{ROSS1976341}, macroeconomic fundamentals matter because they capture common variations in equity returns or, the context of the ICAPM \citep{merton1973intertemporal}, macroeconomic risk matter because they capture the state of the word. The macroeconomic factor model directly tries to capture the macroeconomic fundamentals. 
 
 
-\section{Referee's report}
-Prior research shows that macroeconomic factors can account for financial market returns. However, these studies appear to be disconnected from one another, posing a problem as many of these macroeconomic fundamentals are interrelated and likely overlap in their explanations. This study provides a comprehensive analysis that explores the connections between multiple macroeconomic factors, and proposes a model based on these factors. The results reveal that the macroeconomic fundamentals model provides similar results to the 3-factor Fama-French model and can partially account for the momentum factor. This finding is significant because the 3-factor model plus momentum lacks a theoretical basis, while results suggest that the financial factors may be reflecting exposure to macroeconomic factors.
-
-In terms of implementation, the paper faces several challenges. The first factor, $MYP_{t,t+12}$, measures the change in economic growth expectations. It aims to capture news related to economic growth. As GDP growth is only observable on a quarterly basis, the authors use a proxy for output production, namely the industrial production index, which is observable monthly. However, unlike GDP, which reflects the general condition of the economy, industrial production is more specific to the total output produced and does not account for the price paid by the final consumer or the value-added in the retail sector. 
-
-The authors of the paper construct a mimicking portfolio to capture all anticipated information regarding future economic changes over the next year. Assuming that industrial production growth is an adequate proxy for overall economic growth, there are three main issues to consider. First, the researcher must choose the financial factors to be included in the mimicking portfolio regression. This is a challenging task as it is difficult to include a comprehensive list of assets that incorporates information regarding future economic growth. As a result, there is a risk of omitted variables, which could bias the estimation of the change in economic growth expectation. To address this issue, the authors could employ alternative and more direct measures of changes in economic growth to show the robustness of the results. The paper does show that the factor $MYP_{t,t+12}$ and the Livingston Surveys of Professional Forecasters have a correlation of around 50\%, but it would be interesting to repeat the analysis with alternative measures included as a factor in the proposed factor model. For example, the authors can exploit the Federal Reserve Greenbook forecasts of the real GDP growth as news about economic growth expectations (see \citealp{duffee2022macroeconomic}). Since mid-1974 the Greenbook forecasts have usually a maximum horizon of at least four quarters ahead, we can compute the innovation in the estimates for the same period as a proxy of change in economic growth expectation. The downside of this approach is the implicit assumption that Greenbook forecasts are rational forecasts.
-
-Secondly, the proposed method only captures the change in expectation of one-year economic growth. However, the literature \citep{bansal2004risks} suggests that changes in long-term economic growth prospects also play a crucial role in explaining high-risk premia observed in financial markets.  To provide a more comprehensive analysis, it would be interesting to extend the proposed model to incorporate long-term growth expectations and explore their impact on asset prices. By examining changes in expectations over different horizons, we could also determine whether there are any significant differences in the results.
-
-Thirdly, one of the key assumptions of the proposed model is that investors' perception of news remains constant over time. The preferences of the investors may change for many reasons. On one hand, the composition of investors, which changes over time, affects the market reaction to the news. \cite{garleanu2023heterogeneity} show that imperfect intercohort risk sharing produces consumption uncertainty even when the aggregate consumption risk is deterministic. On the other hand, investors may perceive news differently depending on the current level of optimism or pessimism, leading to overreactions or underreactions. The inclusion of dummy variables in the picking portfolio regression, such as the slope dummy for the market portfolio excess return in 1987 and 1999-2002, is likely to be correlated with general market sentiment. The choice of the specific years for the introduction of these dummy variables may seem arbitrary. An alternative approach could be to use direct measures of market sentiment, such as textual analysis of newspaper headlines, to capture changes in investor perception over time.
-
-The paper estimates the unexpected inflation as realized
-inflation minus the fitted value from an MA(1) process following the \cite{fama1984comparison}. An alternative measure of unexpected inflation is to use Inflation Expectation from the University of Michigan, which is based on Surveys of Consumers, or Greenbook forecasts of inflation. These are more direct measures and do not require a first-stage estimation. However, it may be subject to measurement error due to the nature of the surveys in the first case or relies on the assumption that Greenbook forecasts are rational. 
-
-% Additionally, regarding the table showing the results of the mimicking portfolio estimation, the authors do not explain much the results. It would be helpful if the authors provided more discussion on their findings, particularly those that contrast with previous studies. For example, \cite{vassalou2003news} found that the return on long-term government bonds minus the return on short-term government bonds has a positive coefficient in explaining future changes in GDP. However, in this paper, the long-term government bond has a positive coefficient in explaining future changes in industrial production.
-
-Overall, the paper presents numerous correlation results, but it lacks a strong theory to interpret them. The authors do conduct a Granger causality analysis, but further discussion on the findings would be beneficial. This is particularly true for results that are in contrast with previous findings. Such discussion would be useful in their analysis of the relationship between Fama-French and momentum factors and the macro factor model. It would help us better understand why certain firm characteristics are correlated with macroeconomic shocks.
-
-% We need to use proxy for investors EIS and RRA (middle/young age, or health distribution) 
+% By studying the relationship in different subsamples we are able to document the changes in relationship between the two models. One reason for the varying performance may due to the fact that characteristic factor capture no differently macroeconomic risk.
 
 
-\section{Proposal (further studies)}
-A potential extension of this study would be to expand the sample period to include data from the last decade and repeat the analysis for different subsample periods. By doing so, we would be able to establish the validity of  the findings and investigate the reasons for any variations in results over time. For example, such analyses could provide insights into why the performance of the value premium has weakened. 
- 
-To enhance the performance of the macroeconomic factor model, we could incorporate additional factors that have recently been shown to play a significant role in explaining fluctuations in financial markets. For instance, we could include the level of government debt as a factor. This variable can affect incentives to innovate and, consequently, future prospects \citep{croce2019government}. Another macroeconomic factor that has not been widely used is the ratio of middle-aged to young populations. Different age cohorts can have different investment preferences. This variable could provide valuable insights.
+Our study focuses on examining the benchmark FF model from the perspective of a macroeconomic factor model. To accomplish this, we use the comprehensive macroeconomic factor (MF) model proposed by \cite{aretz2010macroeconomic}. First, I investigate the univariate correlations between the factors derived from both models. Furthermore, we explore how characteristics relate to macroeconomic risk by estimating the exposure of one-way sorted portfolios, based on characteristics, to each of the macroeconomic factors. 
 
-Additionally, we could expand the characteristic-based model to include the Fama-French five-factor model \citep{fama2015five} by incorporating profitability, investment, and momentum factors. It would be particularly interesting to examine how profitability and investment are related to sensitivity to macroeconomic factors. Another model worth exploring is the q-theory factor model \citep{hou2015digesting,hou2021augmented}. We could investigate how each of its factors - profitability, investment, and expected investment growth - are related to macroeconomic factors. This would be a valuable contribution, as the q-theory model is more theory-based. 
+By exploring the relationship in different subsamples, we can identify and document any changes in the relationship between the FF model and the macroeconomic factor model. We seek to understand whether the varying performance of the characteristic factors can be attributed to a regime shift that occurred after the financial crisis.
 
-% I expect profitability risk to be highly correlated with changes in economic growth prospects. On the other hand, I expect the investment to be related to change in the average s
+% I find this and this.
 
-% I predict profitability to be...
-% investment to be ...
-% expected investment growth to be..
+% I plan to do this and this.
 
-Recently, \cite{detzel2022model} evaluate asset pricing models after accounting for transaction costs. It is less costly to hold assets than to sell and buy other assets. Factor models from the literature that seem to perform well ignoring the transaction costs are much less profitable. After transaction costs, the Fama and French six-factor model \cite{fama2018choosing} with cash-based operating profitability instead of accruals operating profitability seems to be the best performing. In our setting, we could check the performance of the macroeconomic factor model after accounting for the transaction costs and see the comparison with the financial factor models. \cite{detzel2022model} have shared their code online.
+The rest of the paper is organized as follows. In Section \ref{literature}, we review the literature. In Section \ref{RD}, we explain the empirical methodology and describe the data. In Section \ref{results}, we show and comment on the results. In Section \ref{plan}, we outline the plan for future drafts.
+
+\section{Prior literature}
+\label{literature}
+
+Working in progress...
+
+% Previous work that study the association between fama french  and macroeconomic fundamentals
+
+% \cite{liew2000can}: GDP growth on market, book-to-market, size and momentum. Can book-to-market, size and momentum be
+% risk factors that predict economic growth?
+
+% \cite{hahn2006yield}: "small stock portfolios have higher loadings on $\Delta def$ than large stock portfolios, while high book-to-market portfolios have higher loadings on $\Delta term$ than low book-to-market portfolios". "small firms tend to be young, poorly collateralized, and have limited access to external capital markets (Gertler and Gilchrist (1994)) and that high book-to-market firms tend to have high financial leverage and cash flow problems (Fama and French(1992),(1995)), small and high book-to-market firms would be more vulnerable to worsening credit market conditions and higher interest rates. Thus, we can expect that the default and term spreads would be good state variable proxies for capturing the cross-sectional pattern of stock returns in size and book-to-market". 
+% default spread: spread between yield to maturity on a Baa corporate bond index and 10-year Treasury constant maturity rate; term spread: spread between 10-year and one-year Treasury constant maturity rates.
+
+% \cite{petkova2006fama}: "changes in financial investment opportunities are not necessarily exclusively related to news about future GDP growth. Campbell (1996) points out that empirical implementations of the ICAPM model should not rely on choosing important macroeconomic variables. Instead, the factors in the model should be related to innovations in state variables that forecast future investment opportunities." "In particular,
+% I choose a set of relevant state variables including the short-term T-bill, term spread, aggregate dividend yield, and default spread. These state variables are chosen to model two aspects of the investment opportunity set, namely, the yield curve and the conditional distribution of asset returns."  Choose variables based on their forecasting power for future investment opportunities: yield curve, measured as short-term T-bill yield (RF), and the term spread (TERM) to capture variations in the level and slope of the yield curve; and conditional distribution of asset returns, measured as aggregate dividend yield (DIV), the default spread (DEF), and interest rates.
+
+% \cite{griffin2003momentum}: momentum on unexpected inflation (UI), changes in expected inflation (DEI), term spread (UTS), and changes in industrial production (MP).
+
+% \cite{aretz2010macroeconomic}: comprehensive macro model...
+
+% Contribution
+% 1. add profitability and investment in the fama French and see how they relate to macroeconomic fundamentals;
+% 2. add q-theory factors.
+% 3. trough this approach I study why the performance changed after the financial crises;
+
+% literature on inflation?
+
+% My contribution: 
+
+
+% 4. inflation became also important in the second part. (is this something documented in the literature? cite)
+
+
+
+
+\section{Research Design}
+\label{RD}
+
+This section is divided into two subsection. In Subsection \ref{method}, we describe the methodology used to study the relationship between benchmark factor model and risk captured by macroeconomic risk. In Subsection \ref{data}, we describe the source of the data. 
+
+\subsection{Methodology}
+\label{method}
+
+We consider the Fama and French five-factor model \citep{fama2015five} along with the momentum factor \citep{carhart1997persistence} as the benchmark firm-characteristic model. The time-series regression of the FF six-factor model can be defined as follows:
+
+\begin{equation}
+    R^i_{t-1,t} = \beta^i_0 + \beta^i_1 RM_{t-1,t} + \beta^i_2 SMB_{t-1,t} + \beta^i_3 HML_{t-1,t} + \beta^i_4 RMW_{t-1,t} + \beta^i_5 CMA_{t-1,t} + \beta^i_6 MOM_{t-1,t} + \varepsilon^i_{t-1,t}
+\end{equation}
+
+The term $R^i_{t-1,t}$ represents the excess return for portfolio $i$. $RM_{t-1,t}$ indicates the excess return on a value-weighted stock market index. $SMB_{t-1,t}$ represents the return of a portfolio that takes a long position in small market capitalization stocks and a short position in big market capitalization stocks. $HML_{t-1,t}$ indicates the return of a portfolio that takes a long position in high book-to-market (BM) ratio stocks and a short position in low BM ratio stocks. $RMW_{t-1,t}$ represents the return of a portfolio that takes a long position in stocks with robust operating profitability and a short position in stocks with weak operating profitability. $CMA_{t-1,t}$ indicates the return of a portfolio that takes a long position in conservative investment stocks and a short position in aggressive investment stocks. Lastly, $WML_{t-1,t}$ represents the return of a portfolio that takes a long position in winner stocks and a short position in loser stocks. Except for $R^i_{t-1,t}$, which represents the excess return for a specific portfolio, the remaining factors ($RM_{t-1,t}$, $SMB_{t-1,t}$, $HML_{t-1,t}$, $RMW_{t-1,t}$, $CMA_{t-1,t}$, $WML_{t-1,t}$) are firm-level characteristics that are used to explain the excess returns.
+
+To examine the relationship between the firm characteristic factors and macroeconomic risks, we investigate how they align with a factor model comprised of macroeconomic fundamentals. In this context, we refer to the comprehensive model proposed by \cite{aretz2010macroeconomic}. This macroeconomic factor model encompasses six factors: (i) changes in one-year ahead industrial production growth expectations, (ii) unexpected inflation, (iii) changes in the aggregate survival probability, (iv) changes in the average level of the term structure, (v) changes in the slope of the term structure, and (vi) changes in a multilateral US dollar exchange rate. The time-series regression of the MF model can be defined as follows:
+
+\begin{equation}
+    R^i_{t-1,t} = \beta^i_0 + \beta^i_1 MYP_{t,t+12} + \beta^i_2 UI_{t-1,t} + \beta^i_3 DSV_{t-1,t} + \beta^i_4 ATS_{t-1,t} + \beta^i_5 STS_{t-1,t} + \beta^i_6 FX_{t-1,t} + \varepsilon^i_{t-1,t}
+\end{equation}
+
+To compute the change in one-year ahead of industrial production growth expectation ($MYP_{t,t+12}$), we employ the mimicking portfolio approach, similar to \cite{vassalou2003news} and \cite{aretz2010macroeconomic}. Firstly, we regress the logarithmic change in industrial production over the next year on a set of base asset excess returns and lagged control variables. At time $t$, the variable $MYP_{t,t+12}$ is calculated as the fitted value of the base asset. In constructing the mimicking portfolio, we are careful not to include factors from the benchmark model to avoid introducing mechanical correlations between the two models. To compute the unexpected inflation ($UI_{t-1,t}$), we adopt the approach outlined by \cite{fama1984comparison}. We first compute the inflation as the logarithmic change in the natural logarithm of the Consumer Price Index. Then, we estimate changes in inflation as a first-order moving average. Unexpected inflation is determined by taking the difference between the actual change in inflation and the estimated change. The aggregate survival probability ($DSV_{t-1,t}$) is computed using \citeauthor{merton1974pricing}'s (\citeyear{merton1974pricing}) option pricing model, as described in \cite{vassalou2004default}. The change in the average level of the term structure ($ATS_{t-1,t}$) is obtained by computing the change in the mean of the 3-month Treasury bill yield and the 10-year Treasury bond yield. The change in the term structure slope ($STS_{t-1,t}$) is derived from the change in the difference between the 10-year Treasury bond yield and the 3-month Treasury bill yield. The change in a multilateral US dollar exchange rate ($FX_{t-1,t}$) is determined using the change in a US composite exchange rate index.
+
+To analyze the relationship between these characteristics and exposure to macroeconomic risks, we begin with univariate analysis. We compute the correlations between the factors from the (FF) and MF models. Next, we use the one-way sorted deciles characteristic portfolios from the benchmark models. For each portfolio, we estimate the risk exposure to the macroeconomic factors. Significant estimates indicate a relationship between the characteristic-based factor and the macroeconomic fundamental factors. Differences in risk exposure across portfolios provide insight into how the characteristic-based factor relates to macroeconomic fundamentals. We then conduct regressions of each characteristic factor on the macroeconomic factors. A significant coefficient suggests that the macroeconomic factor and characteristic factor capture common information.
+
+We correct the standard errors of the analysis induced by the generated macroeconomic factor ($MYP$). Specifically, we stack the moment condition of the first-stage mimicking portfolio regression onto those of the time-series asset pricing model and we estimate the parameters through the Generalized Method of Moments (GMM), following the methodology detailed in \cite{vassalou2003news}.
+
+% Var??? 
+
+To examine regime changes, we repeat the analysis for three subsamples: the full sample period (1975-2021), the sample period before November 2007, and the sample period after December 2007. 
+
+
+
+\subsection{Data description}
+\label{data}
+
+Regarding the FF model, the portfolios and the factors data, as well as the risk-free rate, are sourced from Kenneth French's website. The dividend yield on the S\&P 500 index was obtained from Robert Shiller's website. Maria Vassalou's website has data regarding the changes in the survival probability have public data only until 1999. I extended the data to the period from 2000 to 2008 \footnote{The Pearsons' correlation between the monthly DSV series obtained from Maria Vassalou’s website and ours is $0.645$}. The yield data for 3-month US government Treasury bills, 10-year Treasury bonds, Aaa/Baa-rated corporate bond portfolios, and the exchange rate between the US dollar and a broad trade-weighted composite currency index are sourced from the Federal Reserve Bank's website. Return data on US bond return data are from the CRSP US treasury Database. Gold return data are from Goldhub website. Seasonally-adjusted level of the US industrial production index and the consumer price index from DataStream. All the variables we used are based on a monthly frequency and cover the sample period from January 1975 to December 2021.
+
+
+\section{Preliminary Results}
+\label{results}
+
+Table \ref{tbl:mimick} shows the results of the OLS regression used to find the base asset weights of the mimicking portfolio for $MYP$. We run the regression for three sample periods. The adjusted R squared is high for the subsamples, but it decreases when we consider the full sample. This indicates that the coefficients have varied throughout the sample.
+
+Table \ref{tbl:stats} shows the summary statistics of the macroeconomic factors. In the second subsample (December 2007 - December 2021), we have a higher standard deviation for MYP and UI with a higher mean. Instead, the standard deviation for DSV, ATS, STS, and FX is smaller compared to the first subsample (January 1975 - November 2007) in Panel B.
+
+Table \ref{tbl:corr} shows the correlations between the factors from the FF and the MF model.
+
+
+Figure \ref{fig:betafig} shows which macroeconomic factors have an impact on the one-way sorted characteristic portfolios. In line with the findings in \cite{aretz2010macroeconomic}, in the first part of the sample (January 1975 - November 2007), MYP, DSV, and STS are significant for the portfolios sorted on BM, Size, and Momentum. A similar conclusion can be derived from the portfolio sorted on Profitability and Investment. In the second part of the sample (December 2007 - December 2021), we see a significant change in the macroeconomic exposure of the portfolios. The change in expectation MYP remains significant, but there is no clear pattern on how it correlates with the characteristics since the estimated betas are similar across the portfolios. DSV and STS still show a clear pattern across the portfolios but are only significant for a portion of them. The factors UI and ATS seem to have a more important role compared to the past.
+
+Table \ref{tbl:macroexp} reports the estimation outcome of characteristic factors on the macroeconomic fundamentals. The results seem to be more or less in line with the results from the one-way sorted portfolios. In the first subsample (Panel B), MYP is significant in explaining RM, the BM factor, the Profitability factor, and the Investment factor. DSV has a significant loading on  RM and Size factor. ATS significantly correlates with the Size factor. STS is significant in explaining all the FF factors except for Profitability. FX has a significant influence on the BM factor. In the second subsample (Panel C), MYP is only significant in explaining the RM and the Size factor. UI can explain the BM and Investment factors. DSV is significant in explaining BM, Size, Profitability, and Momentum. ATS can still significantly explain Size, but it also has a significant loading on Profitability and Momentum. Unlike the first subsample, STS has a significant loading on Size, Profitability, and Momentum. Finally, FX loads positively on RM.
+
+\section{Future Plan}
+\label{plan}
+
+An additional characteristic-based model worth exploring is the q-theory factor model \citep{hou2015digesting,hou2021augmented}. We could investigate how each factor - profitability, investment, and expected investment growth - relates to macroeconomic factors. This would be a valuable contribution, as the q-theory model is more theory-based. 
+
+As a robustness test, we could use an alternative measure of the macroeconomic fundamental factors. As a proxy of growth expectation, we could use survey data (eg. revisions of Greenbook forecasts or Survey of Professional Forecasters, see \citealp{duffee2023macroeconomic}). As an alternative to unexpected inflation, we could compute unexpected inflation as the difference between the actual inflation and the forecasts of inflation from the Livingston surveys. An alternative to the aggregate survival probability is the default spread, which is defined as the spread between yield to maturity on a Baa corporate bond index and 10-year Treasury constant maturity rate.
+
+Moreover, an important step would be the estimation of the risk premia associated with the MF model. By assessing variations in the risk premia across various subsamples, we can provide evidence supporting the existence of regime changes.
 
 
 
 \newpage
 
 \bibliographystyle{chicago}
+%\bibliographystyle{plain}
 \bibliography{bibliography}
+
+\newpage
+
+
+\begin{figure}[htb!]
+    \centering
+    \includegraphics[width=1\textwidth]{plots/cumret_ff.png}
+    \caption{This figure shows the cumulative log return of the five factors in the FF five-factor model along with the momentum factor.}
+    \label{fig:cumret_ff}
+\end{figure}
+
+\newpage
+
+
+\begin{figure}
+  \centering  \captionsetup{justification=raggedright,singlelinecheck=false}
+      \caption{Panel A: January 1975 - December 2021 (full sample)}
+      \label{fig:betafig}
+    \includegraphics[width=16cm]{plots/betahist1_sample0.png}\\
+    \includegraphics[width=16cm]{plots/betahist2_sample0.png}\\
+    \includegraphics[width=16cm]{plots/betahist3_sample0.png}\\
+    \includegraphics[width=16cm]{plots/betahist4_sample0.png}\\
+    \includegraphics[width=16cm]{plots/betahist5_sample0.png}\\
+    % \includegraphics[width=16cm]{plots/betahist6_sample0.png}
+\end{figure}
+    \clearpage
+\begin{figure}\ContinuedFloat
+      \centering
+    \captionsetup{justification=raggedright,singlelinecheck=false}
+      \caption{Panel B: January 1975 - November 2007 (first subsample)}
+    \includegraphics[width=16cm]{plots/betahist1_sample1.png}\\
+    \includegraphics[width=16cm]{plots/betahist2_sample1.png}\\
+    \includegraphics[width=16cm]{plots/betahist3_sample1.png}\\
+    \includegraphics[width=16cm]{plots/betahist4_sample1.png}\\
+    \includegraphics[width=16cm]{plots/betahist5_sample1.png}\\
+    % \includegraphics[width=16cm]{plots/betahist6_sample1.png}
+\end{figure}
+    \clearpage
+\begin{figure}\ContinuedFloat
+      \centering
+    \captionsetup{justification=raggedright,singlelinecheck=false}
+      \caption{Panel C: December 2007 - December 2021 (second subsample)}
+    \includegraphics[width=16cm]{plots/betahist1_sample2.png}\\
+    \includegraphics[width=16cm]{plots/betahist2_sample2.png}\\
+    \includegraphics[width=16cm]{plots/betahist3_sample2.png}\\
+    \includegraphics[width=16cm]{plots/betahist4_sample2.png}\\
+    \includegraphics[width=16cm]{plots/betahist5_sample2.png}\\
+    % \includegraphics[width=16cm]{plots/betahist6_sample2.png}
+\captionsetup{labelformat=empty}
+  \caption{This figure shows the macroeconomic risk exposure estimates of the one-way sorted firm characteristic deciles on the macroeconomic fundamentals and their statistics. The macroeconomic fundamentals are changes in industrial production growth expectations (MYP), unexpected inflation (UI), changes in the aggregate survival probability (DSV), changes in the average level and the slope of the term structure of risk-free interest rate yields (ATS and STS, respectively), and changes in the exchange rate between the US dollar and a trade-weighted composite currency (FX). The blue bars are the estimated risk exposures, while the red lines are the t-statistics. The first row shows the outcomes related to the one-way sorted book-to-market deciles, the second those related to the one-way sorted size deciles, the third those related to the one-way sorted momentum deciles, the fourth those related to the one-way sorted operating profitability deciles, the fifth those related to one-way sorted investment deciles, and the sixth those related to one-way sorted accruals deciles. The figures use monthly data (Panel A) from January 1975 to December 2021, (Panel B) from January 1975 to April 2008, and (Panel C) from May 2008 to December 2021.}
+\end{figure}
+
+\newpage
+
+\begin{table}
+  \begin{threeparttable}
+    \caption{Estimation of the mimicking portfolio for industrial production growth}
+    \label{tbl:mimick}
+    \input{tables/mimick}
+    \begin{tablenotes} 
+    \footnotesize
+    \item This table shows the outcomes from OLS estimations of the log change in industrial production over the next year onto a set of base asset excess returns and lagged control variable realizations. The base assets consist of the market portfolio, 10-year treasury bond return, 5-year treasury bond return, and gold. To allow for time-variation in the market portfolio weight, the regression includes two market portfolio slope dummies for the period from April 1987 to April 1988 (the one year surrounding the October 1987 stock market crash), the period from January 1996 to December 2002 (the Internet bubble period), and the period from December 2007 to May 2009 (the Financial crises). All base asset returns are in excess of the risk-free rate of return, and thus weights do not need to sum up to unity. The regressions control for the expected level of returns by including a set of lagged control variables, containing the risk-free rate, the yield spread between long-term and short-term government bonds, the yield spread between one-year and short-term government bonds, the yield spread between Baa-rated and Aaa-rated corporate bonds and the dividend yield on the S\&P 500. Controls include industrial production growth, inflation, and excess market returns over the last year. Since realized industrial production growth has an overlap with its lagged value of eleven months, the variances have the Newey and West (1987) correction with $l = 11$. The table presents the result for three sample periods: i) from January 1975 to December 2021, ii) from January 1975 to November 2007, and iii) from December 2007 to December 2021.
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+\newpage
+
+
+\begin{table}[htb!]
+  \caption{Summary statistics}
+  \label{tbl:stats}
+  \begin{tabularx}{\linewidth}{l*{9}{Y}}
+    \toprule
+    \multicolumn{9}{l}{\textbf{Panel A: January 1975 - December 2021 (full sample)}} \\
+    \midrule
+  \input{tables/summary_stats0}
+  \end{tabularx}
+
+\begin{tabularx}{\linewidth}{l*{9}{Y}}
+    \toprule
+    \multicolumn{9}{l}{\textbf{Panel B: January 1975 - November 2007 (first subsample)}} \\
+    \midrule
+        \input{tables/summary_stats1} 
+  \end{tabularx}
+  
+  \begin{tabularx}{\linewidth}{l*{9}{Y}}
+    \toprule
+    \multicolumn{9}{l}{\textbf{Panel C: December 2007 - December 2021 (second subsample)}} \\
+    \midrule
+        \input{tables/summary_stats2} 
+        \cr
+    \bottomrule 
+  \end{tabularx}
+  This table provides summary statistics on the analysis variables. The sample periods extend (Panel A) from January 1975 to December 2021, (Panel B) from January 1975 to November 2007, and (Panel C) from December 2007 to December 2021. 
+\end{table}
+
+\newpage
+
+
+
+\begin{table}[htb!]
+  \caption{Correlations}
+  \label{tbl:corr}
+  \small
+  \begin{tabularx}{\linewidth}{l*{13}{Y}}
+    \toprule
+    \multicolumn{13}{l}{\textbf{Panel A: January 1975 - December 2021 (full sample)}} \\
+    \midrule
+  \input{tables/corr_stats0}
+  \end{tabularx}
+\begin{tabularx}{\linewidth}{l*{13}{Y}}
+    \toprule
+    \multicolumn{13}{l}{\textbf{Panel B: January 1975 - November 2007 (first subsample)}} \\
+    \midrule
+        \input{tables/corr_stats1} 
+  \end{tabularx}
+% \end{table}
+%     \clearpage
+% \begin{table}\ContinuedFloat
+  \begin{tabularx}{\linewidth}{l*{13}{Y}}
+    \toprule
+    \multicolumn{13}{l}{\textbf{Panel C: December 2007 - December 2021 (second subsample)}} \\
+    \midrule
+        \input{tables/corr_stats2} 
+        \cr
+    \bottomrule 
+  \end{tabularx}
+  This table shows the correlation matrix between the factors of the FF six-factor model (market excess return, BM, size, profitability, investment, and momentum) and the MF model (industrial production growth expectation, unexpected inflation, changes in aggregate survival probability, change in the average level and the slope of the term structure of the risk-free rate, and changes in the exchange rate). The sample periods extend (Panel A) from January 1975 to December 2021, (Panel B) from January 1975 to April 2008, and (Panel C) from May 2008 to December 2021.
+\end{table}
+
+\newpage
+
+% \begin{table}[htb!]
+%   \caption{VAR estimation}
+%   \label{tbl:var}
+%   \scriptsize
+%   \begin{tabularx}{\linewidth}{l*{12}{Y}}
+%     \toprule
+%     \multicolumn{12}{l}{\textbf{Panel A: January 1975 - December 2021 (full sample)}} \\
+%     \midrule
+%   \input{tables/var0}
+%   \end{tabularx}
+% \begin{tabularx}{\linewidth}{l*{12}{Y}}
+%     \toprule
+%     \multicolumn{12}{l}{\textbf{Panel B: January 1975 - November 2007 (first subsample)}} \\
+%     \midrule
+%         \input{tables/var1} 
+%   \end{tabularx}
+% \end{table}
+%     \clearpage
+% \begin{table}\ContinuedFloat
+%   \begin{tabularx}{\linewidth}{l*{12}{Y}}
+%     \toprule
+%     \multicolumn{12}{l}{\textbf{Panel C: December 2007 - December 2021 (second subsample)}} \\
+%     \midrule
+%         \input{tables/var2} 
+%         \cr
+%     \bottomrule 
+%   \end{tabularx}
+%   This table reports the empirical outcomes from estimations of VAR systems on the Fama and French and Carhart benchmark factors, i.e., HML, SMB and WML, and the macroeconomic fundamentals. The macroeconomic fundamentals are the mimicking portfolio on changes in industrial production growth expectations (MYP), unexpected inflation (UI), changes in the survival probability (DSV), changes in the average level of the term structure of risk-free interest rate yields (ATS), changes in the slope of the term structure of risk-free interest rate yields (STS) and changes in the exchange rate between the US dollar and a trade-weighted composite currency (FX). This table uses monthly data (a) from January 1975 to December 2021, and (b) from January 1975 to April 2008, and (c) from May 2008 to December 2021 with a lag size equal to one. Numbers in parentheses are t-statistics. The independent variables are lagged by one period.
+% \end{table}
+
+
+% \begin{table}
+%   \centering
+% \caption{VAR estimation}
+%   \begin{threeparttable}
+%     % \caption{VAR estimation}
+%     \begin{subtable}[b]{\linewidth}
+%       \centering      \captionsetup{justification=raggedright,singlelinecheck=false}
+%       \caption{January 1975 - December 2021 (full sample)}
+%       \input{tables/var0}
+%     \end{subtable}
+%     \end{threeparttable}
+% \end{table}
+%     \clearpage
+% \begin{table}\ContinuedFloat
+%   \centering
+%   \begin{threeparttable}
+%     \begin{subtable}[b]{\linewidth}
+%       \centering
+%       \setcounter{subtable}{1}      \captionsetup{justification=raggedright,singlelinecheck=false}
+%       \caption{January 1975 - April 2008 (first subsample)}
+%       \input{tables/var1}
+%     \end{subtable}
+%       \end{threeparttable}
+% \end{table}
+%     \clearpage
+% \begin{table}\ContinuedFloat
+%   \centering
+%   \begin{threeparttable}
+%     \begin{subtable}[b]{\linewidth}
+%       \centering      
+%       \setcounter{subtable}{2} % set the subtable counter to 2 for the third subtable
+%     % \renewcommand{\thesubtable}{\alph{subtable}} % redefine the subtable label to be (a), (b), (c), etc.
+%     \captionsetup{justification=raggedright,singlelinecheck=false}
+%     \caption{May 2008 - December 2021 (second subsample)}
+%       \input{tables/var2}
+%       \begin{tablenotes}
+%         \small
+%         \item This table reports the empirical outcomes from estimations of VAR systems on the Fama and French and Carhart benchmark factors, i.e., HML, SMB and WML, and the macroeconomic fundamentals. The macroeconomic fundamentals are the mimicking portfolio on changes in industrial production growth expectations (MYP), unexpected inflation (UI), changes in the survival probability (DSV), changes in the average level of the term structure of risk-free interest rate yields (ATS), changes in the slope of the term structure of risk-free interest rate yields (STS) and changes in the exchange rate between the US dollar and a trade-weighted composite currency (FX). This table uses monthly data (a) from January 1975 to December 2021, and (b) from January 1975 to April 2008, and (c) from May 2008 to December 2021 with a lag size equal to one. Numbers in parentheses are t-statistics. The independent variables are lagged by one period.
+%       \end{tablenotes}
+%     \end{subtable}
+%   \end{threeparttable}
+% \end{table}
+
+
+\newpage
+
+\begin{table}[htb!]
+  \caption{Macroeconomic risk exposures}
+  \label{tbl:macroexp}
+  \begin{tabularx}{\linewidth}{l*{8}{Y}}
+    \toprule
+    \multicolumn{8}{l}{\textbf{Panel A: January 1975 - December 2021 (full sample)}} \\
+    \midrule
+  \input{tables/macroexp_sample0}
+   
+  \end{tabularx}
+
+\begin{tabularx}{\linewidth}{l*{8}{Y}}
+    \toprule
+    \multicolumn{8}{l}{\textbf{Panel B: January 1975 - November 2007 (first subsample)}} \\
+    \midrule
+        \input{tables/macroexp_sample1} 
+  \end{tabularx}
+  \end{table}
+    \clearpage
+\begin{table}\ContinuedFloat
+  
+  \begin{tabularx}{\linewidth}{l*{8}{Y}}
+    \toprule
+    \multicolumn{8}{l}{\textbf{Panel C: December 2007 - December 2021 (second subsample)}} \\
+    \midrule
+        \input{tables/macroexp_sample2} 
+        \cr
+    \bottomrule 
+  \end{tabularx}
+  In this table, we show the outcomes from OLS estimations of characteristic portfolio returns onto macroeconomic fundamental realizations. The table shows the estimates and significance levels from the time-series regressions using the factor RM, HML, SMB, RMW, CMA, and WML as dependent variables. The numbers in square parentheses are t-statistics. In the one-step GMM approach, we stack the moment conditions of the mimicking portfolio onto the moment conditions of the asset pricing model. All estimation procedures correct for heteroscedasticity and autocorrelation by using the Newey and West (1987) correction with $l = 12$. The sample periods extend (Panel A) from January 1975 to December 2021, (Panel B) from January 1975 to November 2007, and (Panel C) from December 2007 to December 2021. 
+\end{table}
 
 \end{document}

@@ -304,7 +304,7 @@ Output:
 
     else:
         paramlist = exogvars
-
+    
     # Making the inside of the table, currently does coef + t_stats
     data = []
     for p in paramlist:
@@ -319,7 +319,7 @@ Output:
         r = []
         for m in models:
             cell1 = trygetcov(p,m)
-            if not np.isnan(cell):
+            if not np.isnan(cell1):
                 # r.append('('+format_digform(cell/cell1)+')')
                 r.append('('+format_digform(trygetp(p,m.tvalues))+')')
             else:
@@ -386,10 +386,11 @@ def table_to_latex(coefficients: pd.DataFrame,
     latex_code = ''
     
     # header
-    header = '\n'.join(['{',
-                        '\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\\fi}',
-                        '\\begin{tabular}{@{\extracolsep{2pt}}l*{%i}{c}@{}}' %len(column_name),
-                        '\hline\hline\n'])
+    # header = '\n'.join(['{',
+    #                     '\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\\fi}',
+    #                     '\\begin{tabular}{@{\extracolsep{2pt}}l*{%i}{c}@{}}' %len(column_name),
+    #                     '\hline\hline\n'])
+    header = '\n'
     latex_code += header
     
     # add the column headers for the coefficients table
@@ -414,9 +415,9 @@ def table_to_latex(coefficients: pd.DataFrame,
         latex_code += '\\\\\n'
     
     # add the footer and end the table
-    latex_code += '\\hline\n'
-    latex_code += '\\hline\n'
-    latex_code += '\\end{tabular}\n'
-    latex_code += '}\n'
+    # latex_code += '\\hline\n'
+    # latex_code += '\\hline\n'
+    # latex_code += '\\end{tabular}\n'
+    # latex_code += '}\n'
     
     return latex_code

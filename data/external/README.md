@@ -1,4 +1,5 @@
 F-F_Research_Data_Factors.CSV is from https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html
+F-F_Research_Data_5_Factors_2x3.csv is from https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html
 ie_data.xls is from http://www.econ.yale.edu/~shiller/data.htm
 bloomberg.xlsx is from Bloomberg terminal
 
